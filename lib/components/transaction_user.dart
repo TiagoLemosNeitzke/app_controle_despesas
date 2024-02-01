@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+import '../models/transaction.dart';
 import 'transaction_form.dart';
 import 'transaction_list.dart';
-import '../models/transaction.dart';
 
 class TransactionUser extends StatefulWidget {
   const TransactionUser({Key? key}) : super(key: key);
@@ -45,7 +47,7 @@ class _TransactionUserState extends State<TransactionUser> {
     return Column(
       children: [
         TransactionList(_transactions),
-        TransactionForm(),
+        TransactionForm(_addTransaction),
       ],
     );
   }
