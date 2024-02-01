@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//ess é a classe do formulário
 class TransactionForm extends StatefulWidget {
   final void Function(String, double) onSubmit;
 
@@ -9,6 +10,12 @@ class TransactionForm extends StatefulWidget {
   State<TransactionForm> createState() => _TransactionFormState();
 }
 
+//aqui tenho o estado do formulário, todos os dados passados para o formulário são tratados aqui e enviado para o método _addTransaction
+//recebo os dados via construtor na classe TransactionForm (acima), dentro dela eu posso criar o que quiser.
+//como _TransactionFormState extende de State<TransactionForm> eu tenho acesso a todos os métodos e atributos da classe State, que recebe um genérico, que é a classe que ele vai controlar(TrasactionForm no caso)
+//o método build é obrigatório, ele é chamado sempre que o estado do widget muda, ou seja, sempre que o usuário interage com o formulário
+//o método _submitForm é chamado quando o usuário clica no botão "Nova Transação", ele pega os valores dos campos e envia para o método _addTransaction
+//o método _addTransaction é chamado quando o usuário clica no botão "Nova Transação", ele cria um novo objeto do tipo Transaction e adiciona na lista de transações, depois fecha o modal
 class _TransactionFormState extends State<TransactionForm> {
   final titleController = TextEditingController();
 
@@ -21,7 +28,7 @@ class _TransactionFormState extends State<TransactionForm> {
     if (title.isEmpty || value <= 0) {
       return;
     }
-
+// aqui eu chamo o método(onSubmit) que foi passado via construtor, se tivesse outros métodos eu poderia chamar aqui também usando widget.nomeDoMetodo(parametros se tiver)
     widget.onSubmit(title, value);
   }
 

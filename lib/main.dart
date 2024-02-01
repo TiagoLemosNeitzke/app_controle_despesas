@@ -1,26 +1,55 @@
 import 'dart:math';
 
-import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
 
-import 'components/transaction_list.dart';
+import './components/transaction_form.dart';
+import './components/transaction_list.dart';
 import 'models/transaction.dart';
 
 main() => runApp(const ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  const ExpensesApp({Key? key}) : super(key: key);
+  const ExpensesApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage());
+    final ThemeData tema = ThemeData();
+
+    return MaterialApp(
+      home: MyHomePage(),
+      theme: tema.copyWith(
+        colorScheme: tema.colorScheme.copyWith(
+          primary: Colors.amberAccent,
+          secondary: Colors.amber,
+          tertiary: Colors.white,
+        ),
+        textTheme: tema.textTheme.copyWith(
+          titleLarge: const TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.amber,
+          titleTextStyle: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -50,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactions.add(newTransaction);
     });
+
+    Navigator.of(context).pop();
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -66,9 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesas Pessoais'),
-        actions: [
+        actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
+            color: Theme.of(context).colorScheme.tertiary,
             onPressed: () => _openTransactionFormModal(context),
           ),
         ],
@@ -76,12 +108,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              child: Card(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              child: const Card(
                 color: Colors.blue,
-                child: Text('Gráfico'),
                 elevation: 5,
+                child: Text('Gráfico'),
               ),
             ),
             TransactionList(_transactions),
@@ -89,9 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => _openTransactionFormModal(context),
-      ),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          onPressed: () => _openTransactionFormModal(context),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.tertiary,
+          )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
