@@ -27,19 +27,37 @@ class Chart extends StatelessWidget {
       }
 
       return {'day': DateFormat.E().format(weekDay)[0], 'value': totalSum};
+    }).reversed.toList();
+  }
+
+  double get _weekTotalValue {
+    return groupedTransactions.fold(0.0, (sum, tr) {
+      return sum + (tr['value'] as double);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    groupedTransactions;
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(20),
-      child: Row(
-          children: groupedTransactions.map((tr) {
-        return ChartBar(tr['day'] as String, tr['value'] as double, 0);
-      }).toList()),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: groupedTransactions.map((tr) {
+              final double percentage =
+                  (tr['value'] as double) / _weekTotalValue;
+              return Flexible(
+                fit: FlexFit.tight,
+                child: ChartBar(
+                  tr['day'] as String,
+                  tr['value'] as double,
+                  percentage,
+                ),
+              );
+            }).toList()),
+      ),
     );
   }
 }
