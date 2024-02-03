@@ -46,8 +46,9 @@ class Chart extends StatelessWidget {
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: groupedTransactions.map((tr) {
-              final double percentage =
-                  (tr['value'] as double) / _weekTotalValue;
+              final percentage = _weekTotalValue == 0
+                  ? 0.0
+                  : (tr['value'] as double) / _weekTotalValue;
               return Flexible(
                 fit: FlexFit.tight,
                 child: ChartBar(

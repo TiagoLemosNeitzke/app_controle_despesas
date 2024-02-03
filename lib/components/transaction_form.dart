@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 //ess é a classe do formulário
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double) onSubmit;
-
+  final void Function(String, double, DateTime) onSubmit;
   const TransactionForm(this.onSubmit, {Key? key}) : super(key: key);
 
   @override
@@ -18,18 +18,34 @@ class TransactionForm extends StatefulWidget {
 //o método _addTransaction é chamado quando o usuário clica no botão "Nova Transação", ele cria um novo objeto do tipo Transaction e adiciona na lista de transações, depois fecha o modal
 class _TransactionFormState extends State<TransactionForm> {
   final titleController = TextEditingController();
-
   final valueController = TextEditingController();
+  DateTime? _selectedDate = DateTime.now();
 
   _submitForm() {
     final title = titleController.text;
     final value = double.tryParse(valueController.text) ?? 0;
 
-    if (title.isEmpty || value <= 0) {
+    if (title.isEmpty || value <= 0 || _selectedDate == null) {
       return;
     }
 // aqui eu chamo o método(onSubmit) que foi passado via construtor, se tivesse outros métodos eu poderia chamar aqui também usando widget.nomeDoMetodo(parametros se tiver)
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, _selectedDate!);
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -56,17 +72,48 @@ class _TransactionFormState extends State<TransactionForm> {
                 labelText: 'Valor (R\$)',
               ),
             ),
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'Nenhuma data selecionada'
+                          : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate!)}',
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).primaryColor,
+                    ),
+                    child: Text(
+                      'Selecionar Data',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showDatePicker();
+                    },
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                TextButton(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: _submitForm,
                   child: const Text(
                     'Nova Transação',
                     style: TextStyle(
-                      color: Colors.purple,
+                      color: Colors.white,
                     ),
                   ),
-                  onPressed: _submitForm,
                 )
               ],
             ),
